@@ -1,4 +1,6 @@
 const User = require("../models/UserModel");
+const jwt = require("jsonwebtoken");
+const express = require("express");
 const app = express();
 
 // Create a new User
@@ -12,7 +14,7 @@ exports.create = (req, res) => {
         name: req.body.name,
         password: req.body.password,
         admin: req.body.admin
-    }) ;
+    });
 
     user.save()
         .then(data => {
@@ -50,7 +52,7 @@ exports.authenticate = (req, res) => {
     //         } else {
     //             const payload = {admin: user.admin};
     //             const token = jwt.sign(payload, app.get("superSecret"), {
-    //                 expiresInMinutes: 1440
+    //                 expiresIn: 1440
     //             });
     //             return res.send({
     //                 message: "Enjoy your token : " + token
@@ -70,7 +72,7 @@ exports.authenticate = (req, res) => {
 
     User.findOne({
         name: req.body.name
-    }, function(err, user) {
+    }, (err, user) => {
 
         if (err) throw err;
 
@@ -88,8 +90,8 @@ exports.authenticate = (req, res) => {
                 // we don't want to pass in the entire user since that has the password
                 const payload = {
                     admin: user.admin     };
-                const token = jwt.sign(payload, app.get('superSecret'), {
-                    expiresInMinutes: 1440 // expires in 24 hours
+                const token = jwt.sign(payload, 'ilovescotchyscotch', {
+                    expiresIn: 1440 // expires in 24 hours
                 });
 
                 // return the information including token as JSON

@@ -1,6 +1,7 @@
 module.exports = (app, apiRoutes, jwt) => {
     const notes = require("../controllers/NoteController");
     const users =  require("../controllers/UserController");
+    // const jwt = require("jsonwebtoken");
 
     // Create a new Note
     app.post("/notes", notes.create);
