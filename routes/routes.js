@@ -1,8 +1,13 @@
 module.exports = (app, apiRoutes, jwt) => {
     const notes = require("../controllers/NoteController");
-    const users =  require("../controllers/UserController");
-    // const jwt = require("jsonwebtoken");
+    const users = require("../controllers/UserController");
 
+    // define simple router
+    app.get("/", (req, res) => {
+        res.json({"message": "Welcome to EasyNotes application. This application have feature CRUD, authenticate with token"});
+    });
+
+    // ============== MANAGE NOTE ==================
     // Create a new Note
     app.post("/notes", notes.create);
 
@@ -18,9 +23,9 @@ module.exports = (app, apiRoutes, jwt) => {
     // delete
     app.delete("/notes/:noteId", notes.delete);
 
-    // ========================================================================
+    // ============== MANAGE USER ===================
     // create new user
-    app.post("/setup", users.create);
+    app.post("/users", users.create);
 
     // User authenticate
     apiRoutes.post("/authenticate", users.authenticate);
@@ -33,9 +38,9 @@ module.exports = (app, apiRoutes, jwt) => {
         // decode token
         if (token) {
             // verifies secret and checks exp
-            jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+            jwt.verify(token, app.get('superSecret'), function (err, decoded) {
                 if (err) {
-                    return res.json({ success: false, message: 'Failed to authenticate token.' });
+                    return res.json({success: false, message: 'Failed to authenticate token.'});
                 } else {
                     // if everything is good, save to request for use in other routes
                     req.decoded = decoded;
@@ -58,6 +63,4 @@ module.exports = (app, apiRoutes, jwt) => {
     apiRoutes.get("/check", users.check);
 
     app.use('/api', apiRoutes);
-
-
 };

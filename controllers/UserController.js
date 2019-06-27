@@ -7,7 +7,7 @@ const app = express();
 exports.create = (req, res) => {
     if (!req.body.name || !req.body.password || !req.body.admin) {
         return res.status(400).send({
-            message : "name, password, admin is not empty!"
+            message: "name, password, admin is not empty!"
         });
     }
     const user = new User({
@@ -38,59 +38,22 @@ exports.fillAll = (req, res) => {
 };
 
 exports.authenticate = (req, res) => {
-    // User.findOne({name: req.body.name})
-    // .then(user => {
-    //     if (!user) {
-    //         return res.status(404).send({
-    //             message: "User not found with name " + req.body.name
-    //         });
-    //     } else {
-    //         if (user.password !== req.body.password) {
-    //             return res.send({
-    //                message: "Authentication failed. Wrong password."
-    //             });
-    //         } else {
-    //             const payload = {admin: user.admin};
-    //             const token = jwt.sign(payload, app.get("superSecret"), {
-    //                 expiresIn: 1440
-    //             });
-    //             return res.send({
-    //                 message: "Enjoy your token : " + token
-    //             });
-    //         }
-    //     }
-    // }).catch(err => {
-    //     if (err.kind === "ObjectId") {
-    //         return res.status(404).send({
-    //             message: "User not found with name " + req.body.name
-    //         });
-    //     }
-    //     return  res.status(500).send({
-    //         message: "Some error occurred"
-    //     });
-    // });
-
-    User.findOne({
-        name: req.body.name
-    }, (err, user) => {
-
+    User.findOne({name: req.body.name}, (err, user) => {
         if (err) throw err;
-
         if (!user) {
-            res.json({ success: false, message: 'Authentication failed. User not found.' });
+            res.json({success: false, message: 'Authentication failed. User not found.'});
         } else if (user) {
-
             // check if password matches
             if (user.password !== req.body.password) {
-                res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+                res.json({success: false, message: 'Authentication failed. Wrong password.'});
             } else {
-
                 // if user is found and password is right
                 // create a token with only our given payload
                 // we don't want to pass in the entire user since that has the password
                 const payload = {
-                    admin: user.admin     };
-                const token = jwt.sign(payload, 'ilovescotchyscotch', {
+                    admin: user.admin
+                };
+                const token = jwt.sign(payload, 'thisismysecretkey', {
                     expiresIn: 1440 // expires in 24 hours
                 });
 
@@ -102,7 +65,6 @@ exports.authenticate = (req, res) => {
                 });
             }
         }
-
     });
 };
 
